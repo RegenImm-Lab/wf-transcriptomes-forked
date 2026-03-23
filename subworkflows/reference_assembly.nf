@@ -14,7 +14,7 @@ process map_reads{
     output:
        tuple val(sample_id), 
              path("${sample_id}_reads_aln_sorted.bam"), 
-             path("${sample_id}_reads_aln_sorted.bam.bai"),
+             path("${sample_id}_reads_aln_sorted.bam.csi"),
              emit: bam
        tuple val(sample_id), path("${sample_id}_read_aln_stats.tsv"), emit: stats
     script:
@@ -27,7 +27,7 @@ process map_reads{
     minimap2 -t ${mm2_threads} -ax splice ${params.minimap2_opts} ${index} ${fastq_reads}\
         | samtools view -q ${params.minimum_mapping_quality} -F 2304 -Sb -\
         | seqkit bam -j 1 -x -T '${ContextFilter}' -\
-        | samtools sort --write-index -@ 1 -o "${sample_id}_reads_aln_sorted.bam##idx##${sample_id}_reads_aln_sorted.bam.bai" - ;
+        | samtools sort --write-index -@ 1 -o "${sample_id}_reads_aln_sorted.bam##idx##${sample_id}_reads_aln_sorted.bam.csi" - ;
     ((cat "${sample_id}_reads_aln_sorted.bam" | seqkit bam -s -j 1 - 2>&1)  | tee "${sample_id}_read_aln_stats.tsv" ) || true
 
     # Add sample id header and column; remove last column (File)

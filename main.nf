@@ -649,7 +649,7 @@ workflow pipeline {
         | collectFastqIngressResultsInDir
         // fastq_ingress doesn't have the index; add one extra null for compatibility.
         // We do not use variable name as assigning variable name with a tuple
-        // not matching (e.g. meta, bam, bai, stats <- [meta, bam, stats]) causes
+        // not matching (e.g. meta, bam, csi, stats <- [meta, bam, stats]) causes
         // the workflow to crash.
         reads = reads
         .map{
@@ -705,7 +705,7 @@ workflow pipeline {
         
             assembly_stats = assembly.stats.map{ it -> it[1]}.collect()
      
-            split_bam(assembly.bam.map {sample_id, bam, bai -> [sample_id, bam]})
+            split_bam(assembly.bam.map {sample_id, bam, csi -> [sample_id, bam]})
 
             assemble_transcripts(split_bam.out.bundles.flatMap(map_sample_ids_cls).combine(ref_annotation),use_ref_ann)
 
@@ -903,7 +903,7 @@ workflow pipeline {
             | map { list -> list.collect{
                 [
                  "$publish_prefix_bams/${it}_reads_aln_sorted.bam",
-                 "$publish_prefix_bams/${it}_reads_aln_sorted.bam.bai"
+                 "$publish_prefix_bams/${it}_reads_aln_sorted.bam.csi"
                 ]
             } }
             | concat (igv_ref)
