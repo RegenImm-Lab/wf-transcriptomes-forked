@@ -5,6 +5,8 @@ Transcriptome analysis of cDNA and direct RNA sequencing data.
 
 
 ## Introduction
+#This is forked from the original https://github.com/epi2me-labs/wf-transcriptomes. We made modified so this can be used with large genomes that require .csi indexes instead of .bai indexes. See here for more info on the index (https://www.htslib.org/doc/samtools-index.html)
+
 
 This workflow can be used for the following:
 
